@@ -179,7 +179,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                             {sportTitles[sport] || sport}
                           </h5>
                           <Badge variant="secondary">
-                            {participants.length} participantes
+                            {participants.length} inscripciones
                           </Badge>
                         </div>
 
@@ -248,20 +248,30 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-2xl font-bold text-gray-900">
-                        {Object.keys(registrationsBySport).length}
+                        {(() => {
+                          let totalParticipants = 0;
+                          registrations.forEach(reg => {
+                            if (reg.deporte === "basket-3x3") {
+                              totalParticipants += 3;
+                            } else if (["padel-masculino", "padel-femenino", "padel-mixto", "padel-infantil", "mus", "domino", "parchis"].includes(reg.deporte) && reg.pareja === "si") {
+                              totalParticipants += 2;
+                            } else {
+                              totalParticipants += 1;
+                            }
+                          });
+                          return totalParticipants;
+                        })()}
                       </div>
-                      <div className="text-sm text-gray-500">Deportes con Inscripciones</div>
+                      <div className="text-sm text-gray-500">Total Participantes</div>
                     </CardContent>
                   </Card>
 
                   <Card>
                     <CardContent className="p-4">
                       <div className="text-2xl font-bold text-gray-900">
-                        {registrations.length > 0 
-                          ? Math.round(registrations.reduce((sum, reg) => sum + reg.edad, 0) / registrations.length)
-                          : 0}
+                        {Object.keys(registrationsBySport).length}
                       </div>
-                      <div className="text-sm text-gray-500">Edad Promedio</div>
+                      <div className="text-sm text-gray-500">Deportes Activos</div>
                     </CardContent>
                   </Card>
                 </div>

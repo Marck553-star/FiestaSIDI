@@ -57,7 +57,20 @@ export class DatabaseStorage implements IStorage {
     const stats: { [key: string]: number } = {};
     
     allRegistrations.forEach(reg => {
-      stats[reg.deporte] = (stats[reg.deporte] || 0) + 1;
+      let count = 1; // Default count
+      
+      // Basketball teams count as 3 people
+      if (reg.deporte === "basket-3x3") {
+        count = 3;
+      }
+      // Sports with partner option - if they come with partner, count as 2
+      else if (["padel-masculino", "padel-femenino", "padel-mixto", "padel-infantil", "mus", "domino", "parchis"].includes(reg.deporte)) {
+        if (reg.pareja === "si") {
+          count = 2;
+        }
+      }
+      
+      stats[reg.deporte] = (stats[reg.deporte] || 0) + count;
     });
     
     return stats;

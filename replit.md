@@ -47,32 +47,32 @@ The application uses two main tables:
 - **Middleware**: Request logging and error handling
 
 ### Sports Categories
-The system supports multiple sports categories with highly customized registration forms:
+The system supports multiple sports categories with highly customized registration forms and participant counting:
 
 **Padel Competitive (Masculine, Feminine, Mixed):**
 - Fields: Name, Partner (Si/No), Level (A: Alto-Medio, B: Medio-Bajo), Partner Name (comments field)
-- Streamlined for competitive play organization
+- Participant count: 1 person (no partner) or 2 people (with partner)
 
 **Padel Infantil:**
 - Fields: Name, Partner (Si/No), Partner Name (comments field)
-- No level or contact requirements for children
+- Participant count: 1 person (no partner) or 2 people (with partner)
 
 **Team Sports (Mus, Dominó, Parchís):**
 - Fields: Name, Partner (Si/No), Partner Name (comments field)
-- Simplified for casual team activities
+- Participant count: 1 person (no partner) or 2 people (with partner)
 
 **Basketball 3x3:**
 - Fields: Team Name, Comments
-- Team-focused registration
+- Participant count: Always counts as 3 people per team registration
 
 **Royalty Events (Rey/Reina Fiestas):**
 - Fields: Name, Age, Comments
-- Age requirement for festival competitions
+- Participant count: 1 person per registration
 
 **Other Sports:**
 - Fields: Name, Comments
 - Includes: Tennis (all categories), Ping Pong (all categories), Ajedrez, Poker, Cartas UNO
-- Minimal registration for casual participation
+- Participant count: 1 person per registration
 
 ## Data Flow
 
