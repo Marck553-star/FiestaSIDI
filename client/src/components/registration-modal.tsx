@@ -32,7 +32,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { InsertRegistration } from "@shared/schema";
 
 const createRegistrationSchema = (sport: string) => {
-  const isPadelCompetitive = ["padel-masculino", "padel-femenino", "padel-mixto", "padel-infantil"].includes(sport);
+  const isPadelCompetitive = ["padel-masculino", "padel-femenino", "padel-mixto"].includes(sport);
+  const isPadelInfantil = sport === "padel-infantil";
   const isTeamSports = ["mus", "domino", "parchis"].includes(sport);
   const isBasket = sport === "basket-3x3";
   const isRoyalty = ["rey-fiestas", "reina-fiestas"].includes(sport);
@@ -42,6 +43,15 @@ const createRegistrationSchema = (sport: string) => {
       nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
       telefono: z.string().optional(),
       nivel: isPadelCompetitive ? z.enum(["A", "B"], { required_error: "Selecciona un nivel" }) : z.string().optional(),
+      edad: z.number().optional(),
+      pareja: z.enum(["si", "no"], { required_error: "Indica si vienes con pareja" }),
+      comentarios: z.string().optional(),
+    });
+  } else if (isPadelInfantil) {
+    return z.object({
+      nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+      telefono: z.string().optional(),
+      nivel: z.string().optional(),
       edad: z.number().optional(),
       pareja: z.enum(["si", "no"], { required_error: "Indica si vienes con pareja" }),
       comentarios: z.string().optional(),
@@ -117,7 +127,8 @@ export function RegistrationModal({
   sport,
   onSuccess,
 }: RegistrationModalProps) {
-  const isPadelCompetitive = ["padel-masculino", "padel-femenino", "padel-mixto", "padel-infantil"].includes(sport);
+  const isPadelCompetitive = ["padel-masculino", "padel-femenino", "padel-mixto"].includes(sport);
+  const isPadelInfantil = sport === "padel-infantil";
   const isTeamSports = ["mus", "domino", "parchis"].includes(sport);
   const isBasket = sport === "basket-3x3";
   const isRoyalty = ["rey-fiestas", "reina-fiestas"].includes(sport);
@@ -195,7 +206,7 @@ export function RegistrationModal({
               )}
             />
 
-            {(isPadelCompetitive || isTeamSports) && (
+            {(isPadelCompetitive || isPadelInfantil || isTeamSports) && (
               <FormField
                 control={form.control}
                 name="pareja"
