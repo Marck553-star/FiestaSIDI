@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Trophy, Settings } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { SportsGrid } from "@/components/sports-grid";
 import { RegistrationModal } from "@/components/registration-modal";
-import { AdminPanel } from "@/components/admin-panel";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 interface Stats {
@@ -14,7 +12,6 @@ interface Stats {
 
 export default function Home() {
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
-  const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const [selectedSport, setSelectedSport] = useState<string>("");
   const { toast } = useToast();
 
@@ -48,7 +45,7 @@ export default function Home() {
                 <Trophy className="text-white text-2xl w-8 h-8" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white">Fiestas Urbanización Sidi 2025</h1>
+                <h1 className="text-3xl font-bold text-white">Fiestas Urbanización SIDI 2025</h1>
                 <p className="text-blue-100">Sistema de Inscripciones Deportivas</p>
               </div>
             </div>
@@ -61,14 +58,7 @@ export default function Home() {
                   <div className="text-blue-100 text-sm">Jugadores Totales</div>
                 </div>
               </div>
-              <Button
-                variant="secondary"
-                onClick={() => setIsAdminPanelOpen(true)}
-                className="bg-white text-festive-primary hover:bg-gray-50"
-              >
-                <Settings className="mr-2 h-4 w-4" />
-                Administrar
-              </Button>
+
             </div>
           </div>
         </div>
@@ -76,21 +66,13 @@ export default function Home() {
 
       {/* Mobile Stats Bar */}
       <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-center items-center">
           <div className="text-center">
             <div className="text-xl font-bold text-gray-900">
               {statsData?.totalPlayers || 0}
             </div>
             <div className="text-gray-500 text-sm">Jugadores Totales</div>
           </div>
-          <Button
-            size="sm"
-            onClick={() => setIsAdminPanelOpen(true)}
-            className="bg-festive-primary text-white"
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            Admin
-          </Button>
         </div>
       </div>
 
@@ -113,11 +95,6 @@ export default function Home() {
         onClose={() => setIsRegistrationModalOpen(false)}
         sport={selectedSport}
         onSuccess={handleRegistrationSuccess}
-      />
-
-      <AdminPanel
-        isOpen={isAdminPanelOpen}
-        onClose={() => setIsAdminPanelOpen(false)}
       />
     </div>
   );

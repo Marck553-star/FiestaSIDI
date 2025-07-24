@@ -97,7 +97,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `inscripciones_fiestas_sidi_2025_${new Date().toISOString().split("T")[0]}.csv`;
+    a.download = `inscripciones_fiestas_SIDI_2025_${new Date().toISOString().split("T")[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
