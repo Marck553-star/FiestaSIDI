@@ -47,13 +47,15 @@ The application uses two main tables:
 - **Middleware**: Request logging and error handling
 
 ### Sports Categories
-The system supports multiple sports categories:
-- Padel (Masculine, Feminine, Mixed, Children)
-- Tennis (Masculine, Feminine, Children)
-- Ping Pong (Masculine, Feminine, Children)
-- Basketball 3x3
-- Traditional games (Mus, Dominó, Parchís, UNO, Chess, Poker)
-- Festival competitions (King/Queen of Festivities)
+The system supports multiple sports categories with customized registration forms:
+
+**Padel Competitive (Masculine, Feminine, Mixed):**
+- Full registration form: Name, Phone, Level (A: Alto-Medio, B: Medio-Bajo), Age, Comments
+- Requires all contact and skill information for competitive matching
+
+**All Other Sports:**
+- Simplified form: Name, Partner (optional comments field)
+- Includes: Padel Infantil, Tennis (all categories), Ping Pong (all categories), Basketball 3x3, Traditional games (Mus, Dominó, Parchís, UNO, Chess, Poker), Festival competitions (King/Queen of Festivities)
 
 ## Data Flow
 

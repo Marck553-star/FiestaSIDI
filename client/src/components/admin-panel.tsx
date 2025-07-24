@@ -194,11 +194,15 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                                     {participant.nombre}
                                   </div>
                                   <div className="text-sm text-gray-500">
-                                    Tel: {participant.telefono} • Nivel: {participant.nivel} • Edad: {participant.edad}
+                                    {participant.telefono && participant.telefono !== "" && `Tel: ${participant.telefono} • `}
+                                    {participant.nivel && participant.nivel !== "N/A" && `Nivel: ${participant.nivel} • `}
+                                    {participant.edad && participant.edad !== 0 && `Edad: ${participant.edad}`}
                                   </div>
                                   {participant.comentarios && (
                                     <div className="text-sm text-gray-400 mt-1">
-                                      {participant.comentarios}
+                                      {["padel-masculino", "padel-femenino", "padel-mixto"].includes(participant.deporte) 
+                                        ? `Comentarios: ${participant.comentarios}`
+                                        : `Pareja: ${participant.comentarios}`}
                                     </div>
                                   )}
                                 </div>

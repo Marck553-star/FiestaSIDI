@@ -31,17 +31,37 @@ import {
 import { apiRequest } from "@/lib/queryClient";
 import { InsertRegistration } from "@shared/schema";
 
-const registrationSchema = z.object({
-  nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  telefono: z.string().min(9, "El teléfono debe tener al menos 9 dígitos"),
-  nivel: z.enum(["principiante", "intermedio", "avanzado", "experto"], {
-    required_error: "Selecciona un nivel de experiencia",
-  }),
-  edad: z.number().min(5, "La edad mínima es 5 años").max(99, "La edad máxima es 99 años"),
-  comentarios: z.string().optional(),
-});
+const createRegistrationSchema = (sport: string) => {
+  const isPadelCompetitive = ["padel-masculino", "padel-femenino", "padel-mixto"].includes(sport);
+  
+  if (isPadelCompetitive) {
+    return z.object({
+      nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+      telefono: z.string().min(9, "El teléfono debe tener al menos 9 dígitos"),
+      nivel: z.enum(["A", "B"], {
+        required_error: "Selecciona un nivel",
+      }),
+      edad: z.number().min(5, "La edad mínima es 5 años").max(99, "La edad máxima es 99 años"),
+      comentarios: z.string().optional(),
+    });
+  } else {
+    return z.object({
+      nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+      telefono: z.string().optional(),
+      nivel: z.string().optional(),
+      edad: z.number().optional(),
+      comentarios: z.string().optional(),
+    });
+  }
+};
 
-type RegistrationFormValues = z.infer<typeof registrationSchema>;
+type RegistrationFormValues = {
+  nombre: string;
+  telefono?: string;
+  nivel?: string;
+  edad?: number;
+  comentarios?: string;
+};
 
 interface RegistrationModalProps {
   isOpen: boolean;
@@ -78,13 +98,16 @@ export function RegistrationModal({
   sport,
   onSuccess,
 }: RegistrationModalProps) {
+  const isPadelCompetitive = ["padel-masculino", "padel-femenino", "padel-mixto"].includes(sport);
+  const registrationSchema = createRegistrationSchema(sport);
+  
   const form = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
     defaultValues: {
       nombre: "",
-      telefono: "",
-      nivel: undefined,
-      edad: undefined,
+      telefono: isPadelCompetitive ? "" : undefined,
+      nivel: isPadelCompetitive ? undefined : "N/A",
+      edad: isPadelCompetitive ? undefined : 0,
       comentarios: "",
     },
   });
@@ -102,8 +125,12 @@ export function RegistrationModal({
 
   const onSubmit = (data: RegistrationFormValues) => {
     const registrationData: InsertRegistration = {
-      ...data,
+      nombre: data.nombre,
+      telefono: data.telefono || "",
+      nivel: data.nivel || "N/A",
+      edad: data.edad || 0,
       deporte: sport,
+      comentarios: data.comentarios,
     };
     createRegistrationMutation.mutate(registrationData);
   };
@@ -144,77 +171,79 @@ export function RegistrationModal({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="telefono"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center">
-                    <Phone className="mr-2 h-4 w-4" />
-                    Teléfono
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="+34 123 456 789"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {isPadelCompetitive && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="telefono"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center">
+                        <Phone className="mr-2 h-4 w-4" />
+                        Teléfono
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="+34 123 456 789"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="nivel"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center">
-                    <Signal className="mr-2 h-4 w-4" />
-                    Nivel de Experiencia
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona tu nivel" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="principiante">Principiante</SelectItem>
-                      <SelectItem value="intermedio">Intermedio</SelectItem>
-                      <SelectItem value="avanzado">Avanzado</SelectItem>
-                      <SelectItem value="experto">Experto</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="nivel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center">
+                        <Signal className="mr-2 h-4 w-4" />
+                        Nivel de Experiencia
+                      </FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona tu nivel" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="A">A (Alto-Medio)</SelectItem>
+                          <SelectItem value="B">B (Medio-Bajo)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="edad"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    Edad
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min="5"
-                      max="99"
-                      placeholder="Edad"
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value) || undefined)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="edad"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        Edad
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="5"
+                          max="99"
+                          placeholder="Edad"
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || undefined)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
 
             <FormField
               control={form.control}
@@ -223,12 +252,12 @@ export function RegistrationModal({
                 <FormItem>
                   <FormLabel className="flex items-center">
                     <MessageCircle className="mr-2 h-4 w-4" />
-                    Comentarios (Opcional)
+                    {isPadelCompetitive ? "Comentarios (Opcional)" : "Pareja (Opcional)"}
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       rows={3}
-                      placeholder="Algún comentario adicional..."
+                      placeholder={isPadelCompetitive ? "Algún comentario adicional..." : "Nombre de tu pareja si vas acompañado/a..."}
                       {...field}
                     />
                   </FormControl>
