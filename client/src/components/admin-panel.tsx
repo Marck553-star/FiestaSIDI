@@ -80,13 +80,14 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const handleExportData = () => {
     const csvContent = [
-      ["Nombre", "Teléfono", "Deporte", "Nivel", "Edad", "Comentarios", "Fecha"],
+      ["Nombre", "Teléfono", "Deporte", "Nivel", "Edad", "Con Pareja", "Comentarios", "Fecha"],
       ...registrations.map(reg => [
         reg.nombre,
-        reg.telefono,
+        reg.telefono || "",
         sportTitles[reg.deporte] || reg.deporte,
-        reg.nivel,
-        reg.edad.toString(),
+        reg.nivel || "",
+        reg.edad?.toString() || "",
+        reg.pareja === "si" ? "Sí" : reg.pareja === "no" ? "No" : "",
         reg.comentarios || "",
         new Date(reg.createdAt).toLocaleDateString()
       ])
@@ -194,15 +195,16 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                                     {participant.nombre}
                                   </div>
                                   <div className="text-sm text-gray-500">
-                                    {participant.telefono && participant.telefono !== "" && `Tel: ${participant.telefono} • `}
-                                    {participant.nivel && participant.nivel !== "N/A" && `Nivel: ${participant.nivel} • `}
-                                    {participant.edad && participant.edad !== 0 && `Edad: ${participant.edad}`}
+                                    {participant.telefono && `Tel: ${participant.telefono} • `}
+                                    {participant.nivel && `Nivel: ${participant.nivel} • `}
+                                    {participant.edad && `Edad: ${participant.edad} • `}
+                                    {participant.pareja && `Con pareja: ${participant.pareja === "si" ? "Sí" : "No"}`}
                                   </div>
                                   {participant.comentarios && (
                                     <div className="text-sm text-gray-400 mt-1">
-                                      {["padel-masculino", "padel-femenino", "padel-mixto"].includes(participant.deporte) 
-                                        ? `Comentarios: ${participant.comentarios}`
-                                        : `Pareja: ${participant.comentarios}`}
+                                      {["padel-masculino", "padel-femenino", "padel-mixto", "padel-infantil", "mus", "domino", "parchis"].includes(participant.deporte) 
+                                        ? `Pareja: ${participant.comentarios}`
+                                        : `Comentarios: ${participant.comentarios}`}
                                     </div>
                                   )}
                                 </div>

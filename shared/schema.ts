@@ -11,10 +11,11 @@ export const users = pgTable("users", {
 export const registrations = pgTable("registrations", {
   id: serial("id").primaryKey(),
   nombre: text("nombre").notNull(),
-  telefono: text("telefono").notNull(),
-  nivel: text("nivel").notNull(),
-  edad: integer("edad").notNull(),
+  telefono: text("telefono"),
+  nivel: text("nivel"),
+  edad: integer("edad"),
   deporte: text("deporte").notNull(),
+  pareja: text("pareja"),
   comentarios: text("comentarios"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
