@@ -1,0 +1,1 @@
+This is a website designed for a residential community festival, where participants can register for the available sports activities. The platform allows users to indicate their skill level to be assigned to the appropriate category, specify whether they will participate individually or with a partner, and provides a real-time tally of registered participants.
